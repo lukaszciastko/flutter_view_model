@@ -1,26 +1,26 @@
 part of view_model;
 
-/// A signature for the builder callback used by [ActionBuilder].
+/// A signature for the builder callback used by [AsyncActionBuilder].
 ///
 typedef ActionWidgetBuilder<T> = Widget Function(BuildContext context, Result<T> result);
 
-/// A widget that builds itself when the value of an [Action] changes.
+/// A widget that builds itself when the value of an [AsyncAction] changes.
 ///
-class ActionBuilder<In, R> extends StatelessWidget {
-  const ActionBuilder({
+class AsyncActionBuilder<In, R> extends StatelessWidget {
+  const AsyncActionBuilder({
     Key key,
     @required this.action,
     this.onValue,
     @required this.builder,
   }) : super(key: key);
 
-  final Action<In, R> action;
+  final AsyncAction<In, R> action;
   final ValueChanged<Result<R>> onValue;
   final ActionWidgetBuilder<R> builder;
 
   @override
   Widget build(BuildContext context) {
-    return ActionListener<In, R>(
+    return AsyncActionListener<In, R>(
       action: action,
       onValue: onValue,
       child: ValueListenableBuilder<Result<R>>(

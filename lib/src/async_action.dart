@@ -31,7 +31,7 @@ class ErrorResult<T> extends Result<T> {
   ErrorResult(dynamic error) : super._internal(null, error);
 }
 
-typedef ActionMapper<In, R> = Future<R> Function(In input);
+typedef AsyncActionMapper<In, R> = Future<R> Function(In input);
 
 /// A utility class that holds the value of an input.
 ///
@@ -40,12 +40,12 @@ class _InputSnapshot<T> {
   final T value;
 }
 
-class Action<In, R> extends ChangeNotifier implements LifecycleListener, ValueListenable<Result<R>> {
-  Action(LifecycleProvider lifecycleProvider, this.mapper, {this.initialInput}) {
+class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, ValueListenable<Result<R>> {
+  AsyncAction(LifecycleProvider lifecycleProvider, this.mapper, {this.initialInput}) {
     lifecycleProvider.addLifecycleListener(this);
   }
 
-  final ActionMapper<In, R> mapper;
+  final AsyncActionMapper<In, R> mapper;
   final In initialInput;
 
   In get input => _inputSnapshot.value;

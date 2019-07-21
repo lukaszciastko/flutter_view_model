@@ -1,7 +1,8 @@
 name: view_model
 description: A state management system for Flutter with support for lifecycle-aware View Models, events, and asynchronous Actions.
 version: 0.0.1
-author: Lukasz Ciastko
+author: Lukasz Ciastko <lukasz@fluttered.io>
+homepage: https://github.com/lukaszciastko/flutter_view_model
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

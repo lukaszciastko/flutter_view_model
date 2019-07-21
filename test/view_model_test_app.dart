@@ -138,7 +138,7 @@ class TestApp extends StatelessWidget {
 
 class ActionViewModel extends ViewModel {
   ActionViewModel({Duration delayDuration}) {
-    multiplyAction = Action<int, int>(this, (int value) async {
+    multiplyAction = AsyncAction<int, int>(this, (int value) async {
       if (value > 0) {
         if (delayDuration != null) {
           await Future<void>.delayed(delayDuration);
@@ -150,7 +150,7 @@ class ActionViewModel extends ViewModel {
     });
   }
 
-  Action<int, int> multiplyAction;
+  AsyncAction<int, int> multiplyAction;
 
   @override
   void onInit() {
@@ -227,8 +227,8 @@ class MultiplyPage extends StatelessWidget {
     );
   }
 
-  ActionBuilder<int, int> _buildBodyActionBuilder(ActionViewModel viewModel) {
-    return ActionBuilder<int, int>(
+  AsyncActionBuilder<int, int> _buildBodyActionBuilder(ActionViewModel viewModel) {
+    return AsyncActionBuilder<int, int>(
       action: viewModel.multiplyAction,
       builder: (BuildContext context, Result<int> result) {
         if (result.hasValue) {
