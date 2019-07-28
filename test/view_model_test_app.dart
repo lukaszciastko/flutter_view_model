@@ -138,7 +138,7 @@ class TestApp extends StatelessWidget {
 
 class ActionViewModel extends ViewModel {
   ActionViewModel({Duration delayDuration}) {
-    multiplyAction = AsyncAction<int, int>(this, (int value) async {
+    multiplyAction = AsyncAction<int, int>((int value) async {
       if (value > 0) {
         if (delayDuration != null) {
           await Future<void>.delayed(delayDuration);
@@ -147,7 +147,7 @@ class ActionViewModel extends ViewModel {
       } else {
         return await Future<int>.error('Value must be above 0.');
       }
-    });
+    }, lifecycle: this);
   }
 
   AsyncAction<int, int> multiplyAction;

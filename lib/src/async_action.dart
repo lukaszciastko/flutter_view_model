@@ -41,8 +41,16 @@ class _InputSnapshot<T> {
 }
 
 class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, ValueListenable<Result<R>> {
-  AsyncAction(LifecycleProvider lifecycleProvider, this.mapper, {this.initialInput}) {
-    lifecycleProvider.addLifecycleListener(this);
+  AsyncAction(
+    this.mapper, {
+    LifecycleProvider lifecycle,
+    this.initialInput,
+  }) {
+    if (lifecycle != null) {
+      lifecycle.addLifecycleListener(this);
+    } else {
+      init();
+    }
   }
 
   final AsyncActionMapper<In, R> mapper;
@@ -62,15 +70,26 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
 
   @override
   void onInit() {
-    if (initialInput != null) {
+    init();
+  }
+
+  void init() {
+    if (initialInput != null && input == null) {
       perform(input: initialInput);
     }
   }
 
   @override
   void onDispose() {
-    _inputSnapshot = null;
-    _streamController?.close();
+    dispose();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    if (_streamController != null && !_streamController.isClosed) {
+      _streamController?.close();
+    }
   }
 
   Future<R> perform({In input, bool notifyAwaitingResult = true}) async {
