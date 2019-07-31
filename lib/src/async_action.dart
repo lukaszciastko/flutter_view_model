@@ -60,7 +60,7 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
   _InputSnapshot<In> _inputSnapshot;
 
   Result<R> get result => _result;
-  Result<R> _result;
+  Result<R> _result = AwaitingResult<R>();
 
   @override
   Result<R> get value => result;
@@ -94,7 +94,7 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
 
   Future<R> perform({In input, bool notifyAwaitingResult = true}) async {
     final _InputSnapshot<In> inputSnapshot = _inputSnapshot = _InputSnapshot<In>(input);
-    if (notifyAwaitingResult) {
+    if (notifyAwaitingResult && !(_result is AwaitingResult<R>)) {
       _setResultAndNotifyListeners(AwaitingResult<R>());
     }
     try {
