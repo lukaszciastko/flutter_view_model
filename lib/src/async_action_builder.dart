@@ -10,11 +10,13 @@ class AsyncActionBuilder<In, R> extends StatelessWidget {
   const AsyncActionBuilder({
     Key key,
     @required this.action,
+    this.initialValue,
     this.onValue,
     @required this.builder,
   }) : super(key: key);
 
   final AsyncAction<In, R> action;
+  final Result<R> initialValue;
   final ValueChanged<Result<R>> onValue;
   final ActionWidgetBuilder<R> builder;
 
@@ -22,6 +24,7 @@ class AsyncActionBuilder<In, R> extends StatelessWidget {
   Widget build(BuildContext context) {
     return AsyncActionListener<In, R>(
       action: action,
+      initialValue: initialValue,
       onValue: onValue,
       child: ValueListenableBuilder<Result<R>>(
         valueListenable: action,

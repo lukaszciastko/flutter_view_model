@@ -6,11 +6,13 @@ class AsyncActionListener<In, R> extends StatefulWidget {
   const AsyncActionListener({
     Key key,
     this.action,
+    this.initialValue,
     this.onValue,
     @required this.child,
   }) : super(key: key);
 
   final AsyncAction<In, R> action;
+  final Result<R> initialValue;
   final ValueChanged<Result<R>> onValue;
   final Widget child;
 
@@ -19,6 +21,8 @@ class AsyncActionListener<In, R> extends StatefulWidget {
 }
 
 class _AsyncActionListenerState<In, R> extends State<AsyncActionListener<In, R>> {
+  bool _emittedInitialValue = false;
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +50,14 @@ class _AsyncActionListenerState<In, R> extends State<AsyncActionListener<In, R>>
   }
 
   void _onValue() {
-    widget.onValue(widget.action.value);
+    Result<R> value = widget.action.value;
+    if (!_emittedInitialValue) {
+      if (widget.initialValue != null) {
+        value = widget.initialValue;
+      }
+      _emittedInitialValue = true;
+    }
+    widget.onValue(value);
   }
 
   void _addOnValueListener(AsyncActionListener<In, R> widget) {
