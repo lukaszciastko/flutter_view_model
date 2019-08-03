@@ -92,7 +92,7 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
     }
   }
 
-  Future<R> perform({In input, bool notifyAwaitingResult = true}) async {
+  Future<R> perform({In input, bool notifyAwaitingResult = true, bool notifyError = true}) async {
     final _InputSnapshot<In> inputSnapshot = _inputSnapshot = _InputSnapshot<In>(input);
     if (notifyAwaitingResult && !(_result is AwaitingResult<R>)) {
       _setResultAndNotifyListeners(AwaitingResult<R>());
@@ -104,16 +104,20 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
       }
       return result;
     } catch (e) {
-      if (inputSnapshot == _inputSnapshot) {
+      if (notifyError && inputSnapshot == _inputSnapshot) {
         _setResultAndNotifyListeners(ErrorResult<R>(e));
       }
       rethrow;
     }
   }
 
-  Future<R> tryPerform({In input, bool notifyAwaitingResult = true}) async {
+  Future<R> tryPerform({In input, bool notifyAwaitingResult = true, bool notifyError = true}) async {
     try {
-      return await perform(input: input, notifyAwaitingResult: notifyAwaitingResult);
+      return await perform(
+        input: input,
+        notifyAwaitingResult: notifyAwaitingResult,
+        notifyError: notifyError,
+      );
     } catch (_) {
       return null;
     }
