@@ -10,11 +10,11 @@ class Result<T> {
     return this is AwaitingResult<T>;
   }
 
-  bool get isAwaitingInitial {
-    return isAwaiting && !isAwaitingInProgress;
+  bool get isAwaitingInProgress {
+    return this is AwaitingResultInProgress<T>;
   }
 
-  bool get isAwaitingInProgress {
+  bool get isAwaitingAfterError {
     return this is AwaitingResultInProgress<T>;
   }
 
@@ -33,6 +33,10 @@ class AwaitingResult<T> extends Result<T> {
 
 class AwaitingResultInProgress<T> extends AwaitingResult<T> {
   AwaitingResultInProgress() : super();
+}
+
+class AwaitingResultAfterError<T> extends AwaitingResultInProgress<T> {
+  AwaitingResultAfterError() : super();
 }
 
 class ValueResult<T> extends Result<T> {
@@ -113,7 +117,11 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
     }
     final _InputSnapshot<In> inputSnapshot = _inputSnapshot = _InputSnapshot<In>(input);
     if (notifyAwaitingResult && !(_result is AwaitingResultInProgress<R>)) {
-      _setResultAndNotifyListeners(AwaitingResultInProgress<R>());
+      if (_previousResult?.hasError == true) {
+        _setResultAndNotifyListeners(AwaitingResultAfterError<R>());
+      } else {
+        _setResultAndNotifyListeners(AwaitingResultInProgress<R>());
+      }
     }
     try {
       final R result = await mapper(input);
@@ -139,14 +147,6 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
     } catch (_) {
       return null;
     }
-  }
-
-  bool hadPreviousResultError() {
-    return _previousResult?.hasError == true;
-  }
-
-  bool hadPreviousResultValue() {
-    return _previousResult?.hasValue == true;
   }
 
   void _setResultAndNotifyListeners(Result<R> value) {
