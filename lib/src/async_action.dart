@@ -141,6 +141,14 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
     }
   }
 
+  bool hadPreviousResultError() {
+    return _previousResult?.hasError == true;
+  }
+
+  bool hadPreviousResultValue() {
+    return _previousResult?.hasValue == true;
+  }
+
   void _setResultAndNotifyListeners(Result<R> value) {
     if (_result != value) {
       _result = value;
