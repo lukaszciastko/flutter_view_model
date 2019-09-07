@@ -10,6 +10,10 @@ class Result<T> {
     return this is AwaitingResult<T>;
   }
 
+  bool get isAwaitingInitial {
+    return isAwaiting && !isAwaitingInProgress;
+  }
+
   bool get isAwaitingInProgress {
     return this is AwaitingResultInProgress<T>;
   }
