@@ -10,6 +10,10 @@ class Result<T> {
     return this is AwaitingResult<T>;
   }
 
+  bool get isAwaitingInProgress {
+    return this is AwaitingResultInProgress<T>;
+  }
+
   bool get hasValue {
     return this is ValueResult<T>;
   }
@@ -21,6 +25,10 @@ class Result<T> {
 
 class AwaitingResult<T> extends Result<T> {
   AwaitingResult() : super._internal(null, null);
+}
+
+class AwaitingResultInProgress<T> extends AwaitingResult<T> {
+  AwaitingResultInProgress() : super();
 }
 
 class ValueResult<T> extends Result<T> {
@@ -94,8 +102,8 @@ class AsyncAction<In, R> extends ChangeNotifier implements LifecycleListener, Va
 
   Future<R> perform({In input, bool notifyAwaitingResult = true, bool notifyError = true}) async {
     final _InputSnapshot<In> inputSnapshot = _inputSnapshot = _InputSnapshot<In>(input);
-    if (notifyAwaitingResult && !(_result is AwaitingResult<R>)) {
-      _setResultAndNotifyListeners(AwaitingResult<R>());
+    if (notifyAwaitingResult && !(_result is AwaitingResultInProgress<R>)) {
+      _setResultAndNotifyListeners(AwaitingResultInProgress<R>());
     }
     try {
       final R result = await mapper(input);
