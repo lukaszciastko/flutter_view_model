@@ -15,7 +15,7 @@ class Result<T> {
   }
 
   bool get isAwaitingAfterError {
-    return this is AwaitingResultInProgress<T>;
+    return this is AwaitingResultAfterError<T>;
   }
 
   bool get hasValue {
