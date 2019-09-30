@@ -29,22 +29,42 @@ class Result<T> {
 
 class AwaitingResult<T> extends Result<T> {
   AwaitingResult() : super._internal(null, null);
+
+  AwaitingResult<R> map<R>() {
+    return AwaitingResult<R>();
+  }
 }
 
 class AwaitingResultInProgress<T> extends AwaitingResult<T> {
   AwaitingResultInProgress() : super();
+
+  AwaitingResultInProgress<R> map<R>() {
+    return AwaitingResultInProgress<R>();
+  }
 }
 
 class AwaitingResultAfterError<T> extends AwaitingResultInProgress<T> {
   AwaitingResultAfterError() : super();
+
+  AwaitingResultAfterError<R> map<R>() {
+    return AwaitingResultAfterError<R>();
+  }
 }
 
 class ValueResult<T> extends Result<T> {
   ValueResult(T value) : super._internal(value, null);
+
+  ValueResult<R> map<R>(R Function(T value) mapper) {
+    return ValueResult<R>(mapper(value));
+  }
 }
 
 class ErrorResult<T> extends Result<T> {
   ErrorResult(dynamic error) : super._internal(null, error);
+
+  ErrorResult<R> map<R>() {
+    return ErrorResult<R>(error);
+  }
 }
 
 typedef AsyncActionMapper<In, R> = Future<R> Function(In input);
