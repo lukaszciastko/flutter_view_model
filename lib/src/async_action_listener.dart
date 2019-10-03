@@ -8,12 +8,14 @@ class AsyncActionListener<In, R> extends StatefulWidget {
     this.action,
     this.initialValue,
     this.onValue,
+    this.onDispose,
     @required this.child,
   }) : super(key: key);
 
   final AsyncAction<In, R> action;
   final Result<R> initialValue;
   final ValueChanged<Result<R>> onValue;
+  final VoidCallback onDispose;
   final Widget child;
 
   @override
@@ -41,6 +43,9 @@ class _AsyncActionListenerState<In, R> extends State<AsyncActionListener<In, R>>
   @override
   void dispose() {
     _removeOnValueListener(widget);
+    if (widget.onDispose != null) {
+      widget.onDispose();
+    }
     super.dispose();
   }
 

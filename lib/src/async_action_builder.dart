@@ -12,12 +12,14 @@ class AsyncActionBuilder<In, R> extends StatelessWidget {
     @required this.action,
     this.initialValue,
     this.onValue,
+    this.onDispose,
     @required this.builder,
   }) : super(key: key);
 
   final AsyncAction<In, R> action;
   final Result<R> initialValue;
   final ValueChanged<Result<R>> onValue;
+  final VoidCallback onDispose;
   final ActionWidgetBuilder<R> builder;
 
   @override
@@ -26,6 +28,7 @@ class AsyncActionBuilder<In, R> extends StatelessWidget {
       action: action,
       initialValue: initialValue,
       onValue: onValue,
+      onDispose: onDispose,
       child: ValueListenableBuilder<Result<R>>(
         valueListenable: action,
         builder: (BuildContext context, Result<R> value, _) {
