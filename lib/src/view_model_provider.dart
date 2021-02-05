@@ -23,7 +23,7 @@ class ViewModelProvider extends StatefulWidget {
   /// A static utility method that provides access to the root [ViewModelProvider]'s state.
   ///
   static _ViewModelProviderState of(BuildContext context) {
-    return context.rootAncestorStateOfType(const TypeMatcher<_ViewModelProviderState>());
+    return context.findAncestorStateOfType<_ViewModelProviderState>();
   }
 
   /// A static method that returns a [ViewModel] instance of the specified type if one exists
