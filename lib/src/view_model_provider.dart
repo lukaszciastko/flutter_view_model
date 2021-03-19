@@ -30,7 +30,7 @@ class ViewModelProvider extends StatefulWidget {
   /// in the widget tree. If no [ViewModel] of the specified type exists, the method throws a [StateError].
   ///
   static T get<T extends ViewModel>(BuildContext context) {
-    return of(context).viewModels.lastWhere((ViewModel viewModel) => TypeMatcher<T>().check(viewModel));
+    return of(context).viewModels.lastWhere((ViewModel viewModel) => viewModel is T);
   }
 }
 
